@@ -18,17 +18,17 @@ def train(train_loader, val_loader):
     # For tensorboard Usage: tensorboard --logdir src/runs/
     writer = SummaryWriter()
 
-    # Grok
-    smaple_image, _ = next(iter(train_loader))
-    input_shape = smaple_image.shape[1:]
-    model = CNN(num_classes=config.NUM_CLASSES, input_shape=input_shape).to(config.DEVICE)
+    # # Grok
+    # smaple_image, _ = next(iter(train_loader))
+    # input_shape = smaple_image.shape[1:]
+    # model = CNN(num_classes=config.NUM_CLASSES, input_shape=input_shape).to(config.DEVICE)
 
-    # model = CNN().to(config.DEVICE)
+    model = CNN().to(config.DEVICE)
     # model = AlexNet(config.NUM_CLASSES).to(config.DEVICE)
     
     criterion = nn.CrossEntropyLoss()
     optimizer = AdamW(model.parameters(), lr = config.LR, weight_decay=config.WEIGHT_DECAY)
-    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=config.PATIENCE, 
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.3, patience=config.PATIENCE, 
                                   threshold=0.01, threshold_mode='rel', min_lr=config.MIN_LR)
 
     for epoch in range(1, config.NUM_EPOCHS+1):
@@ -37,7 +37,7 @@ def train(train_loader, val_loader):
         train_loss = 0.0
 
         for image, label in tqdm(train_loader, desc=f"Train Epoch{epoch}"):
-            image, label = cutmix_or_mixup(image, label)
+            # image, label = cutmix_or_mixup(image, label)
             image, label = image.to(config.DEVICE), label.to(config.DEVICE)
             optimizer.zero_grad()
             outputs = model(image)

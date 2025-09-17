@@ -44,11 +44,11 @@ def GetTransforms(train:True):
             v2.PILToTensor(),
             v2.Resize((224, 224)),
             # v2.RandomApply([ # Randomly apply below transformation
-            v2.RandomResizedCrop(size=(224, 224), scale=(0.08, 1.0)),
+            # v2.RandomResizedCrop(size=(224, 224), scale=(0.08, 1.0)),
             v2.RandomHorizontalFlip(),
             v2.RandomRotation(degrees=10),
-            v2.RandomAffine(degrees=30, translate=(0.1, 0.1), scale=(0.8, 1.2), shear=10),
-            v2.ColorJitter(brightness=0.2, contrast=0.2),
+            # v2.RandomAffine(degrees=30, translate=(0.1, 0.1), scale=(0.8, 1.2), shear=10),
+            # v2.ColorJitter(brightness=0.2, contrast=0.2),
             v2.ToDtype(torch.float32, scale=True),
             v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
         ])
@@ -66,8 +66,8 @@ def LoadData():
     train_dataset = CustomImageDataset(config.TRAIN_DIR, config.CLASS_LIST, transform=GetTransforms(True))
     val_dataset = CustomImageDataset(config.TEST_DIR, config.CLASS_LIST, transform=GetTransforms(False))
 
-    train_loader = DataLoader(train_dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=config.BATCH_SIZE, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=8)
+    val_loader = DataLoader(val_dataset, batch_size=config.BATCH_SIZE, shuffle=False, num_workers=8)
 
     # CutMix & MixUp
     cutmix = v2.CutMix(num_classes=config.NUM_CLASSES)
@@ -78,12 +78,14 @@ def LoadData():
 
 # # For Debug
 # if __name__ == "__main__":
-#     train_loader, val_loader = LoadData()
+#     train_loader, val_loader, cutmix_or_mixup = LoadData()
 
-#     for images, labels in train_loader:
-#         print(f"{images.shape = }, {labels.shape = }")
-#         print(labels.dtype)
-#         break
+
+
+#     # for images, labels in train_loader:
+#     #     print(f"{images.shape = }, {labels.shape = }")
+#     #     print(labels.dtype)
+#     #     break
 
 #     def imshow(img):
 #         img = img / 2 + 0.5
@@ -91,7 +93,8 @@ def LoadData():
 #         plt.imshow(np.transpose(npimg, (1, 2, 0)))
 #         plt.show()
 
-#     dataiter = iter(dataloader)
+#     dataiter = iter(train_loader)
+#     # image, label = cutmix_or_mixup(next(dataiter))
 #     image, label = next(dataiter)
 #     imshow(torchvision.utils.make_grid(image))
 #     print(' '.join(f'{config.CLASS_LIST[label[j]]:5s}' for j in range(config.BATCH_SIZE)))

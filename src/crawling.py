@@ -21,7 +21,7 @@ def GoogleImageDownload(query, image_count, download_path):
     driver.get(URL)
 
     # Scroll to load more images
-    for i in range(5):  # Scroll 3 times
+    for i in range(10):  # Scroll 5 times
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
 
@@ -31,7 +31,7 @@ def GoogleImageDownload(query, image_count, download_path):
     print(f"=== Start Collecting Images for {query} ===")
     
     # Get Image Elements
-    images = driver.find_elements(By.CSS_SELECTOR, "img.YQ4gaf")
+    images = driver.find_elements(By.CSS_SELECTOR, "img.YQ4gaf") #dimg_PYrKaILxAp7l2roP1vmAwQc_71 #dimg_PYrKaILxAp7l2roP1vmAwQc_157
     img_urls = []
     for image in images:
         if len(img_urls) >= image_count:
@@ -43,22 +43,31 @@ def GoogleImageDownload(query, image_count, download_path):
     download_count = 0
 
     for img_url in tqdm(img_urls, desc=f"Downloading {query}"):
-        
-        # File Path
-        file_path = os.path.join(download_path)
-        
-        # Download & Save Image
-        urllib.request.urlretrieve(img_url, file_path + f"{download_count}.jpg")
-        download_count += 1
-        time.sleep(1)
+        try:
+            # File Path
+            # file_path = os.path.join(download_path)
+            
+            # Download & Save Image
+            # urllib.request.urlretrieve(img_url, file_path + f"{download_count}.jpg")
+            response = requests.get(img_url, stream=True)
+            if response.status_code == 200:
+                with open(os.path.join(download_path, f"{download_count}.jpg"), "wb") as f:
+                    f.write(response.content)
+                    print(f"Downloaded image {download_count}")
+                    download_count += 1
+            else:
+                print(f"Failed to download image {download_count}")
+            time.sleep(1)
+        except Exception as e:
+            print(f"Error downloading image {download_count}: {e}")
 
     print(f"=== Finish Downloading {download_count} Images for {query} ===")
     driver.quit()
 
 if __name__ == "__main__":
     cat_list = ["SiameseCat", "TuxedoCat", "NorwegianForestCat", "RussianBlueCat"]
-    image_count = 100
+    image_count = 500
 
     for cat in cat_list:
-        download_path = os.path.join(config.TRAIN_DIR + '/' + cat + "/")
+        download_path = os.path.join(config.TRAIN_DIR + cat + "/")
         GoogleImageDownload(cat, image_count, download_path)
