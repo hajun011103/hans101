@@ -31,7 +31,7 @@ def GoogleImageDownload(query, image_count, download_path):
     print(f"=== Start Collecting Images for {query} ===")
     
     # Get Image Elements
-    images = driver.find_elements(By.CSS_SELECTOR, "img.YQ4gaf") #dimg_PYrKaILxAp7l2roP1vmAwQc_71 #dimg_PYrKaILxAp7l2roP1vmAwQc_157
+    images = driver.find_elements(By.CSS_SELECTOR, "img.YQ4gaf")
     img_urls = []
     for image in images:
         if len(img_urls) >= image_count:
