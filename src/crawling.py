@@ -21,7 +21,7 @@ def GoogleImageDownload(query, image_count, download_path):
     driver.get(URL)
 
     # Scroll to load more images
-    for i in range(10):  # Scroll 5 times
+    for i in range(10):  # Scroll 10 times
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
 
@@ -43,12 +43,8 @@ def GoogleImageDownload(query, image_count, download_path):
     download_count = 0
 
     for img_url in tqdm(img_urls, desc=f"Downloading {query}"):
-        try:
-            # File Path
-            # file_path = os.path.join(download_path)
-            
+        try:            
             # Download & Save Image
-            # urllib.request.urlretrieve(img_url, file_path + f"{download_count}.jpg")
             response = requests.get(img_url, stream=True)
             if response.status_code == 200:
                 with open(os.path.join(download_path, f"{download_count}.jpg"), "wb") as f:
