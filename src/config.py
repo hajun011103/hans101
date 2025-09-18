@@ -9,7 +9,6 @@ DEVICE = torch.accelerator.current_accelerator().type if torch.accelerator.is_av
 
 CLASS_LIST = ("SiameseCat", "TuxedoCat", "NorwegianForestCat", "RussianBlueCat")
 NUM_CLASSES = len(CLASS_LIST)
-RUN_NAME = "CNN"
 
 BATCH_SIZE = 64
 NUM_EPOCHS = 30
