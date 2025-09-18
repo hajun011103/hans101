@@ -18,11 +18,6 @@ def train(train_loader, val_loader):
     # For tensorboard Usage: tensorboard --logdir src/runs/
     writer = SummaryWriter()
 
-    # # Grok
-    # smaple_image, _ = next(iter(train_loader))
-    # input_shape = smaple_image.shape[1:]
-    # model = CNN(num_classes=config.NUM_CLASSES, input_shape=input_shape).to(config.DEVICE)
-
     model = CNN().to(config.DEVICE)
     # model = AlexNet(config.NUM_CLASSES).to(config.DEVICE)
     
